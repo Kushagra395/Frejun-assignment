@@ -72,7 +72,7 @@ const Navbar = ({
   <img
   src={frejunLogo}
   alt="Frejun Logo"
-  className="w-12 h-12 animate-scale-in"
+  className="w-15 h-15 animate-scale-in"
 />
   <h1 className="text-6xl font-extrabold tracking-wide animate-fade-in-up">
     <span className="text-green-500">Fre</span>
