@@ -224,6 +224,9 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
               <span className="text-lg">→</span>
             </button>
           </div>
+          <div className="mt-6 text-center text-sm text-base-content opacity-70">
+  Made with ❤️ by Kushagra
+</div>
         </>
       )}
     </div>
