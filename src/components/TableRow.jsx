@@ -1,22 +1,32 @@
-import React from "react";
 import { useState } from "react";
+import React from "react";
 
-const TableRow = ({ comment, postTitle }) => {
+const TableRow = ({ comment, postTitle, onEdit }) => {
   const [editedName, setEditedName] = useState(comment.name);
   const [editedBody, setEditedBody] = useState(comment.body);
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingBody, setIsEditingBody] = useState(false);
 
-  const handleKey = (e, field) => {
+  const handleKeyDown = (e, field) => {
     if (e.key === "Enter") {
-      if (field === "name") setIsEditingName(false);
-      if (field === "body") setIsEditingBody(false);
+      if (field === "name") {
+        setIsEditingName(false);
+        if (editedName !== comment.name) {
+          onEdit(comment.id, { ...comment, name: editedName });
+        }
+      }
+      if (field === "body") {
+        setIsEditingBody(false);
+        if (editedBody !== comment.body) {
+          onEdit(comment.id, { ...comment, body: editedBody });
+        }
+      }
     }
   };
 
   return (
     <tr>
-      <td>{comment.email}</td>
+      <td className="p-3 border-t border-base-300 align-top">{comment.email}</td>
 
       {/* Editable Name */}
       <td
@@ -28,8 +38,13 @@ const TableRow = ({ comment, postTitle }) => {
             type="text"
             value={editedName}
             onChange={(e) => setEditedName(e.target.value)}
-            onBlur={() => setIsEditingName(false)}
-            onKeyDown={(e) => handleKey(e, "name")}
+            onBlur={() => {
+              setIsEditingName(false);
+              if (editedName !== comment.name) {
+                onEdit(comment.id, { ...comment, name: editedName });
+              }
+            }}
+            onKeyDown={(e) => handleKeyDown(e, "name")}
             className="input input-sm input-bordered w-full"
             autoFocus
           />
@@ -47,8 +62,13 @@ const TableRow = ({ comment, postTitle }) => {
           <textarea
             value={editedBody}
             onChange={(e) => setEditedBody(e.target.value)}
-            onBlur={() => setIsEditingBody(false)}
-            onKeyDown={(e) => handleKey(e, "body")}
+            onBlur={() => {
+              setIsEditingBody(false);
+              if (editedBody !== comment.body) {
+                onEdit(comment.id, { ...comment, body: editedBody });
+              }
+            }}
+            onKeyDown={(e) => handleKeyDown(e, "body")}
             className="textarea textarea-bordered w-full"
             autoFocus
           />
