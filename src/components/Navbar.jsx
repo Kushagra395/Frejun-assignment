@@ -1,5 +1,5 @@
 import React from "react";
-
+import frejunLogo from '../assets/frejun-logo.png';
 import { useState, useEffect } from "react";
 import {
   FaSearchPlus,
@@ -70,10 +70,10 @@ const Navbar = ({
       {/* frejuns Logo + Title */}
      <div className="flex items-center justify-center gap-3 mt-6 mb-4 animate-fade-in-up">
   <img
-    src="./src/assets/frejun-logo.png"
-    alt="Frejun Logo"
-    className="w-15 h-15 animate-scale-in"
-  />
+  src={frejunLogo}
+  alt="Frejun Logo"
+  className="w-12 h-12 animate-scale-in"
+/>
   <h1 className="text-6xl font-extrabold tracking-wide animate-fade-in-up">
     <span className="text-green-500">Fre</span>
     <span className="text-base-content">jun’s Sheet</span>
