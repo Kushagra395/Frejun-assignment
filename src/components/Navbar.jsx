@@ -68,19 +68,18 @@ const Navbar = ({
   return (
     <div className="w-full">
       {/* frejuns Logo + Title */}
-      <div className="flex items-center justify-center gap-5 mt-6 mb-10">
-        <img
-          src="/src/assets/frejun-logo.png"
-          alt="Frejun Logo"
-          className="w-15 h-15"
-        />
-        <h1 className="text-6xl font-extrabold tracking-wide">
-          <span className="text-green-500">Fre</span>
-          <span className={isDark ? "text-white" : "text-black"}>
-            jun’s Sheet
-          </span>
-        </h1>
-      </div>
+     <div className="flex items-center justify-center gap-3 mt-6 mb-4 animate-fade-in-up">
+  <img
+    src="/src/assets/frejun-logo.png"
+    alt="Frejun Logo"
+    className="w-15 h-15 animate-scale-in"
+  />
+  <h1 className="text-6xl font-extrabold tracking-wide animate-fade-in-up">
+    <span className="text-green-500">Fre</span>
+    <span className="text-base-content">jun’s Sheet</span>
+ 
+  </h1>
+</div>
 
       {/* Search  */}
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 ">
