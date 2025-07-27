@@ -70,7 +70,7 @@ const Navbar = ({
       {/* frejuns Logo + Title */}
      <div className="flex items-center justify-center gap-3 mt-6 mb-4 animate-fade-in-up">
   <img
-    src="/src/assets/frejun-logo.png"
+    src="./src/assets/frejun-logo.png"
     alt="Frejun Logo"
     className="w-15 h-15 animate-scale-in"
   />
