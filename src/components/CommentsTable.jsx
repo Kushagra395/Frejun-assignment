@@ -224,9 +224,20 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
               <span className="text-lg">→</span>
             </button>
           </div>
+
+          {/* Footer */}
           <div className="mt-6 text-center text-sm text-base-content opacity-70">
-  Made with ❤️ by Kushagra
+  Made with ❤️ by{" "}
+  <a
+    href="https://kushagra-portfolio-eta.vercel.app/" //  portfolio link clikable
+    target="_blank"
+    rel="noopener noreferrer"
+    className="font-semibold underline hover:text-primary"
+  >
+    Kushagra
+  </a>
 </div>
+
         </>
       )}
     </div>
