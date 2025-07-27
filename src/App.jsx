@@ -16,7 +16,10 @@ function App() {
   const handleSearch = (term) => {
     setSearch(term);
   };
-
+const handleReset = () => {
+  localStorage.removeItem("comment_edits");
+  window.location.reload(); // refresh to trigger re-fetch
+};
   // Save file as CSV
   const handleDownload = () => {
     const headers = ["Email", "Name", "Body", "Post"];
@@ -43,15 +46,16 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-base-200 text-base-content font-sans">
+    <div className="min-h-screen   text-base-content font-sans">
       <Navbar
-        onSearch={handleSearch}
-        zoom={zoom}
-        setZoom={setZoom}
-        isEditing={isEditing}
-        setIsEditing={setIsEditing}
-        handleDownload={handleDownload}
-      />
+  onSearch={handleSearch}
+  zoom={zoom}
+  setZoom={setZoom}
+  isEditing={isEditing}
+  setIsEditing={setIsEditing}
+  handleDownload={handleDownload}
+  handleReset={handleReset}
+/>
 
       <CommentsTable
         search={search}

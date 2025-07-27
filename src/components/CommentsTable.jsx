@@ -1,7 +1,7 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { fetchComments, fetchPosts } from "../utils/api";
 import useLocalStorage from "../hooks/useLocalStorage";
-import React from "react";
 
 const CommentsTable = ({ search, zoom, isEditing }) => {
   const [comments, setComments] = useState([]);
@@ -9,6 +9,8 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [localEdits, setLocalEdits] = useLocalStorage("comment_edits", {});
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+
   const COMMENTS_PER_PAGE = 10;
 
   useEffect(() => {
@@ -17,7 +19,6 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
       const commentsData = await fetchComments();
       const postsData = await fetchPosts();
 
-      // Create postId -> title map
       const postMap = {};
       postsData.forEach((post) => (postMap[post.id] = post.title));
 
@@ -29,7 +30,6 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
     loadData();
   }, []);
 
-  // Merge edits from localStorage
   const merged = comments.map((comment) => {
     const edit = localEdits[comment.id];
     return edit
@@ -37,7 +37,6 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
       : comment;
   });
 
-  // Search filtering
   const filtered = merged.filter((comment) => {
     const searchLower = search.toLowerCase();
     return (
@@ -47,19 +46,27 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
     );
   });
 
-  // Pagination
-  const totalPages = Math.ceil(filtered.length / COMMENTS_PER_PAGE);
-  const paginated = filtered.slice(
+  const sorted = [...filtered].sort((a, b) => {
+    if (!sortConfig.key) return 0;
+
+    const aVal = a[sortConfig.key].toLowerCase();
+    const bVal = b[sortConfig.key].toLowerCase();
+
+    return sortConfig.direction === "asc"
+      ? aVal.localeCompare(bVal)
+      : bVal.localeCompare(aVal);
+  });
+
+  const paginated = sorted.slice(
     (currentPage - 1) * COMMENTS_PER_PAGE,
     currentPage * COMMENTS_PER_PAGE
   );
 
   const handlePageChange = (page) => {
-    if (page < 1 || page > totalPages) return;
+    if (page < 1 || page > Math.ceil(sorted.length / COMMENTS_PER_PAGE)) return;
     setCurrentPage(page);
   };
 
-  // Edit handler for Name/Body
   const handleEdit = (id, updatedComment) => {
     setLocalEdits({
       ...localEdits,
@@ -70,13 +77,22 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
     });
   };
 
+  const handleSort = (key) => {
+    setSortConfig((prev) => ({
+      key,
+      direction:
+        prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+    }));
+  };
+
+  const totalPages = Math.ceil(sorted.length / COMMENTS_PER_PAGE);
+
   return (
-    <div className="p-4 bg-base-200 min-h-screen">
+    <div className="p-6 min-h-screen">
       {loading ? (
         <div className="text-center text-lg py-10">Loading comments...</div>
       ) : (
         <>
-          {/* Zoom Wrapper */}
           <div
             className="rounded-xl shadow-lg overflow-auto bg-base-100"
             style={{ transform: `scale(${zoom})`, transformOrigin: "top left" }}
@@ -84,8 +100,48 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
             <table className="min-w-full border border-base-300">
               <thead className="bg-primary text-primary-content text-sm uppercase tracking-wide">
                 <tr>
-                  <th className="p-3 border border-base-300">Email</th>
-                  <th className="p-3 border border-base-300">Name</th>
+                  {/* Sorting Email */}
+                  <th
+                    onClick={() => handleSort("email")}
+                    className="p-3 border border-base-300 cursor-pointer relative group select-none"
+                  >
+                    Email
+                    <span
+                      className={`absolute right-2 top-1/2 -translate-y-1/2 text-xs transition-opacity ${
+                        sortConfig.key === "email"
+                          ? "opacity-100"
+                          : "group-hover:opacity-100 opacity-0"
+                      }`}
+                    >
+                      {sortConfig.key === "email"
+                        ? sortConfig.direction === "asc"
+                          ? "↑"
+                          : "↓"
+                        : "⇅"}
+                    </span>
+                  </th>
+
+                  {/* Sorting Name */}
+                  <th
+                    onClick={() => handleSort("name")}
+                    className="p-3 border border-base-300 cursor-pointer relative group select-none"
+                  >
+                    Name
+                    <span
+                      className={`absolute right-2 top-1/2 -translate-y-1/2 text-xs transition-opacity ${
+                        sortConfig.key === "name"
+                          ? "opacity-100"
+                          : "group-hover:opacity-100 opacity-0"
+                      }`}
+                    >
+                      {sortConfig.key === "name"
+                        ? sortConfig.direction === "asc"
+                          ? "↑"
+                          : "↓"
+                        : "⇅"}
+                    </span>
+                  </th>
+
                   <th className="p-3 border border-base-300">Body</th>
                   <th className="p-3 border border-base-300">Post</th>
                 </tr>
@@ -94,11 +150,7 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
                 {paginated.map((comment, index) => (
                   <tr
                     key={comment.id}
-                    className={
-                      index % 2 === 0
-                        ? "bg-primary/20"
-                        : "bg-primary/10"
-                    }
+                    className={index % 2 === 0 ? "bg-primary/20" : "bg-primary/10"}
                   >
                     <td className="p-3 border border-base-300">{comment.email}</td>
 
@@ -114,7 +166,7 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
                               name: e.target.value,
                             })
                           }
-                          className="input input-sm input-bordered w-full"
+                          className="w-50 h-full px-2 py-6 bg-primary/10 text-base-content  border border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                       ) : (
                         comment.name
@@ -132,7 +184,7 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
                               body: e.target.value,
                             })
                           }
-                          className="textarea textarea-bordered textarea-xs w-full"
+                         className="w-150 h-full px-2 py-6 bg-primary/10 text-base-content  border border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary"
                         />
                       ) : (
                         comment.body
@@ -149,23 +201,27 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
           </div>
 
           {/* Pagination Controls */}
-          <div className="flex justify-center gap-2 mt-6">
+          <div className="flex justify-center items-center gap-4 mt-6">
             <button
-              className="btn btn-sm"
               onClick={() => handlePageChange(currentPage - 1)}
               disabled={currentPage === 1}
+              className="btn btn-sm btn-circle bg-base-200 hover:bg-base-300 disabled:opacity-50"
+              title="Previous Page"
             >
-              Prev
+              <span className="text-lg">←</span>
             </button>
-            <div className="text-sm font-medium">
+
+            <span className="text-sm font-semibold text-base-content">
               Page {currentPage} of {totalPages}
-            </div>
+            </span>
+
             <button
-              className="btn btn-sm"
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
+              className="btn btn-sm btn-circle bg-base-200 hover:bg-base-300 disabled:opacity-50"
+              title="Next Page"
             >
-              Next
+              <span className="text-lg">→</span>
             </button>
           </div>
         </>

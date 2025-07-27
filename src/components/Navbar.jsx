@@ -1,5 +1,6 @@
+import React from "react";
 
-import React from "react";import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   FaSearchPlus,
   FaSearchMinus,
@@ -7,12 +8,22 @@ import {
   FaEdit,
   FaSun,
   FaMoon,
+  FaUndo,
 } from "react-icons/fa";
 
 const themes = [
-  "light", "dark", "cupcake", "bumblebee", "corporate",
-  "synthwave", "dracula", "cyberpunk", "valentine",
-  "aqua", "forest", "luxury"
+  "light",
+  "dark",
+  "cupcake",
+  "bumblebee",
+  "corporate",
+  "synthwave",
+  "dracula",
+  "cyberpunk",
+  "valentine",
+  "aqua",
+  "forest",
+  "luxury",
 ];
 
 const Navbar = ({
@@ -21,7 +32,8 @@ const Navbar = ({
   setZoom,
   isEditing,
   setIsEditing,
-  handleDownload
+  handleDownload,
+  handleReset,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("light");
@@ -43,42 +55,50 @@ const Navbar = ({
     onSearch(e.target.value);
   };
 
-  const darkThemes = ["dark", "dracula", "synthwave", "aqua", "forest", "luxury"];
+  const darkThemes = [
+    "dark",
+    "dracula",
+    "synthwave",
+    "aqua",
+    "forest",
+    "luxury",
+  ];
   const isDark = darkThemes.includes(selectedTheme);
 
   return (
     <div className="w-full">
-      {/* Logo + Title */}
-      <div className="flex items-center justify-center gap-3 mt-6 mb-4">
+      {/* frejuns Logo + Title */}
+      <div className="flex items-center justify-center gap-5 mt-6 mb-10">
         <img
           src="/src/assets/frejun-logo.png"
           alt="Frejun Logo"
-          className="w-12 h-12"
+          className="w-15 h-15"
         />
-        <h1 className="text-5xl font-extrabold tracking-wide">
+        <h1 className="text-6xl font-extrabold tracking-wide">
           <span className="text-green-500">Fre</span>
-          <span className={isDark ? "text-white" : "text-black"}>jun’s Sheet</span>
-           
+          <span className={isDark ? "text-white" : "text-black"}>
+            jun’s Sheet
+          </span>
         </h1>
       </div>
 
-      {/* Search + Theme + Controls */}
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-2">
-        {/* Search */}
+      {/* Search  */}
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 ">
+        {/* Search Input */}
         <input
           type="text"
           placeholder="Search by name, email or body..."
           value={searchTerm}
           onChange={handleInput}
-          className="input input-bordered w-full max-w-xl"
+          className="input input-bordered w-full max-w-xl bg-trimary-content "
         />
 
-        {/* Controls + Theme */}
+        {/* Controls */}
         <div className="flex items-center gap-2">
           {/* Zoom In */}
           <button
             onClick={() => setZoom((prev) => Math.min(prev + 0.1, 2))}
-            className="btn btn-circle bg-base-100 hover:bg-primary text-primary-content"
+            className="btn btn-circle bg-base-100 hover:bg-primary text-trimary-content"
             title="Zoom In"
           >
             <FaSearchPlus />
@@ -87,31 +107,50 @@ const Navbar = ({
           {/* Zoom Out */}
           <button
             onClick={() => setZoom((prev) => Math.max(prev - 0.1, 0.5))}
-            className="btn btn-circle bg-base-100 hover:bg-primary text-primary-content"
+            className="btn btn-circle bg-base-100 hover:bg-primary text-trimary-content"
             title="Zoom Out"
           >
             <FaSearchMinus />
           </button>
 
-          {/* Download CSV */}
+          {/* Download */}
           <button
             onClick={handleDownload}
-            className="btn btn-circle bg-base-100 hover:bg-primary text-primary-content"
+            className="btn btn-circle bg-base-100 hover:bg-primary text-trimary-content"
             title="Download CSV"
           >
             <FaDownload />
           </button>
 
-          {/* Toggle Edit Mode */}
+          {/* Reset */}
           <button
-            onClick={() => setIsEditing((prev) => !prev)}
-            className="btn btn-circle bg-base-100 hover:bg-primary text-primary-content"
-            title="Toggle Edit"
+            onClick={handleReset}
+            className="btn btn-circle bg-base-100 hover:bg-primary text-trimary-content"
+            title="Reset Edits"
           >
-            <FaEdit />
+            <FaUndo />
           </button>
 
-          {/* Theme Selector */}
+          {/* Edit/Done Toggle */}
+          {isEditing ? (
+            <button
+              onClick={() => setIsEditing(false)}
+              className="btn btn-sm bg-green-500 text-white hover:bg-green-600"
+              title="Finish Editing"
+            >
+              ✅ Done
+            </button>
+          ) : (
+            <button
+              onClick={() => setIsEditing(true)}
+              className="btn btn-circle bg-base-100 hover:bg-primary text-trimary-content"
+              title="Toggle Edit Mode"
+            >
+              <FaEdit />
+            </button>
+          )}
+
+          {/* Theme selection */}
           <select
             value={selectedTheme}
             onChange={handleThemeChange}
@@ -124,8 +163,11 @@ const Navbar = ({
             ))}
           </select>
 
-          {/* Theme Icon */}
-          <button className="btn btn-ghost btn-circle text-lg" aria-label="theme">
+          {/* Theme icons */}
+          <button
+            className="btn btn-ghost btn-circle text-lg"
+            aria-label="theme"
+          >
             {isDark ? <FaMoon /> : <FaSun />}
           </button>
         </div>
