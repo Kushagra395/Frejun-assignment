@@ -7,8 +7,8 @@ This project fulfills all 5 sub-tasks mentioned in Frejun's frontend intern assi
 
 ## 🚀 Live Preview
 
-> [🔗 View Live Project](https://your-deployment-url.com)  
-*(Replace with your actual Netlify/Vercel link)*
+> [🔗 View Live Project](https://frejun-assignment.vercel.app/)  
+
 
 ---
 
