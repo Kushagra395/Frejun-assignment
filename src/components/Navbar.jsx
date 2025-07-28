@@ -81,9 +81,8 @@ const Navbar = ({
   </h1>
 </div>
 
-      {/* Search  */}
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 ">
-        {/* Search Input */}
+      {/* Search function  */}
+      <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 pt-8 ">
         <input
           type="text"
           placeholder="Search by name, email or body..."
@@ -92,7 +91,7 @@ const Navbar = ({
           className="input input-bordered w-full max-w-xl bg-trimary-content "
         />
 
-        {/* Controls */}
+        {/* Extra control functions */}
         <div className="flex items-center gap-2">
           {/* Zoom In */}
           <button
@@ -112,7 +111,7 @@ const Navbar = ({
             <FaSearchMinus />
           </button>
 
-          {/* Download */}
+          {/* Download the file */}
           <button
             onClick={handleDownload}
             className="btn btn-circle bg-base-100 hover:bg-primary text-trimary-content"
@@ -121,7 +120,7 @@ const Navbar = ({
             <FaDownload />
           </button>
 
-          {/* Reset */}
+          {/* Reset to original */}
           <button
             onClick={handleReset}
             className="btn btn-circle bg-base-100 hover:bg-primary text-trimary-content"
@@ -130,7 +129,7 @@ const Navbar = ({
             <FaUndo />
           </button>
 
-          {/* Edit/Done Toggle */}
+          {/* Edit and done  */}
           {isEditing ? (
             <button
               onClick={() => setIsEditing(false)}

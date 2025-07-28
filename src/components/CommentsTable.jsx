@@ -11,7 +11,7 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
   const [localEdits, setLocalEdits] = useLocalStorage("comment_edits", {});
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
 
-  const COMMENTS_PER_PAGE = 10;
+  const COMMENTS_PER_PAGE = 10; //comments per page
 
   useEffect(() => {
     const loadData = async () => {
@@ -100,7 +100,7 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
             <table className="min-w-full border border-base-300">
               <thead className="bg-primary text-primary-content text-sm uppercase tracking-wide">
                 <tr>
-                  {/* Sorting Email */}
+                  {/*  Email */}
                   <th
                     onClick={() => handleSort("email")}
                     className="p-3 border border-base-300 cursor-pointer relative group select-none"
@@ -121,7 +121,7 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
                     </span>
                   </th>
 
-                  {/* Sorting Name */}
+                  {/*   Name */}
                   <th
                     onClick={() => handleSort("name")}
                     className="p-3 border border-base-300 cursor-pointer relative group select-none"
@@ -154,7 +154,7 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
                   >
                     <td className="p-3 border border-base-300">{comment.email}</td>
 
-                    {/* Editable Name */}
+                    {/* editable Name */}
                     <td className="p-3 border border-base-300">
                       {isEditing ? (
                         <input
