@@ -85,7 +85,7 @@ const Navbar = ({
       <div className="flex flex-col sm:flex-row justify-between items-center gap-4 px-6 pt-8 ">
         <input
           type="text"
-          placeholder="Search by name, email or body..."
+          placeholder="Search name, email, body, or post title..."
           value={searchTerm}
           onChange={handleInput}
           className="input input-bordered w-full max-w-xl bg-trimary-content "

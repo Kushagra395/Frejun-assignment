@@ -37,14 +37,22 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
       : comment;
   });
 
-  const filtered = merged.filter((comment) => {
-    const searchLower = search.toLowerCase();
-    return (
-      comment.name.toLowerCase().includes(searchLower) ||
-      comment.email.toLowerCase().includes(searchLower) ||
-      comment.body.toLowerCase().includes(searchLower)
-    );
-  });
+const normalize = (text) =>
+  text?.toLowerCase().replace(/\s+/g, " ").trim();
+
+const filtered = merged.filter((comment) => {
+  const searchLower = normalize(search);
+
+  const nameMatch = normalize(comment.name).includes(searchLower);
+  const emailMatch = normalize(comment.email).includes(searchLower);
+  const bodyMatch = normalize(comment.body).includes(searchLower);
+  const postTitleMatch = normalize(posts[comment.postId] || "").includes(searchLower);
+
+  return nameMatch || emailMatch || bodyMatch || postTitleMatch;
+});
+
+
+
 
   const sorted = [...filtered].sort((a, b) => {
     if (!sortConfig.key) return 0;
@@ -154,7 +162,7 @@ const CommentsTable = ({ search, zoom, isEditing }) => {
                   >
                     <td className="p-3 border border-base-300">{comment.email}</td>
 
-                    {/* editable Name */}
+                    {/*  editable Name */}
                     <td className="p-3 border border-base-300">
                       {isEditing ? (
                         <input
